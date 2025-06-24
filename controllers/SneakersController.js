@@ -116,17 +116,22 @@ export const getCart = async (req, res) => {
 export const getOneSneaker = async (req, res) => {
   try {
     console.log("ID из запроса:", req.params.id);
+
     const sneaker = await Sneakers.findOne({ _id: req.params.id });
+
     console.log("Найденная кроссовка:", sneaker);
+
+    if (!sneaker) {
+      return res.status(404).json({ message: "Кроссовка не найдена" });
+    }
 
     res.json(sneaker);
   } catch (err) {
-    console.log(err);
-    res.json({
-      message: "Не удалось получить определнные кроссовки",
-    });
+    console.error(err);
+    res.status(500).json({ message: "Ошибка при получении кроссовки" });
   }
 };
+
 
 export const updateSneaker = async (req, res) => {
   try {
