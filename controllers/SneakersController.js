@@ -115,11 +115,19 @@ export const getCart = async (req, res) => {
 
 export const getOneSneaker = async (req, res) => {
   try {
-    console.log("ID из запроса:", req.params.id);
+    const { id } = req.params;
 
-    const sneaker = await Sneakers.findOne({ _id: req.params.id });
+    // Попробуй как ObjectId, если это возможно
+    let sneaker;
 
-    console.log("Найденная кроссовка:", sneaker);
+    if (mongoose.Types.ObjectId.isValid(id)) {
+      sneaker = await Sneakers.findById(id);
+    }
+
+    // Если не нашли, попробуй как строку
+    if (!sneaker) {
+      sneaker = await Sneakers.findOne({ _id: id });
+    }
 
     if (!sneaker) {
       return res.status(404).json({ message: "Кроссовка не найдена" });
@@ -131,6 +139,7 @@ export const getOneSneaker = async (req, res) => {
     res.status(500).json({ message: "Ошибка при получении кроссовки" });
   }
 };
+
 
 
 export const updateSneaker = async (req, res) => {
