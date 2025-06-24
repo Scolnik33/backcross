@@ -116,7 +116,7 @@ export const getCart = async (req, res) => {
 export const getOneSneaker = async (req, res) => {
   try {
     console.log("ID из запроса:", req.params.id);
-    const sneaker = await Sneakers.findById(req.params.id);
+    const sneaker = await Sneakers.findOne({ _id: req.params.id });
     console.log("Найденная кроссовка:", sneaker);
 
     res.json(sneaker);
